@@ -13,24 +13,16 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+const app: FirebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth: Auth = getAuth(app);
 const db: Firestore = getFirestore(app);
 let analytics: Analytics | undefined;
 
 if (typeof window !== 'undefined') {
-    if (!getApps().length) {
-        try {
-            analytics = getAnalytics(app);
-        } catch (error) {
-            console.log('Failed to initialize Analytics', error);
-        }
-    } else {
-        try {
-            analytics = getAnalytics();
-        } catch (error) {
-            console.log('Failed to get Analytics instance', error);
-        }
+    try {
+        analytics = getAnalytics(app);
+    } catch (error) {
+        console.log('Failed to initialize Analytics', error);
     }
 }
 
