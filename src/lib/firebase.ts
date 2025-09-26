@@ -4,13 +4,12 @@ import { getFirestore, Firestore } from 'firebase/firestore';
 import { getAnalytics, Analytics } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAO4VDDZwRkpyp1pIgaHMRlEONuBGNCETQ",
-  authDomain: "predictive-analytics-85582.firebaseapp.com",
-  projectId: "predictive-analytics-85582",
-  storageBucket: "predictive-analytics-85582.firebasestorage.app",
-  messagingSenderId: "2841254081",
-  appId: "1:2841254081:web:829fb912bdb2399ba5dc40",
-  measurementId: "G-D1G9ZHWEG7"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
 let app: FirebaseApp;
