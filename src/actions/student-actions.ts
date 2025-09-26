@@ -39,6 +39,21 @@ export async function addStudentAction(studentData: Omit<Student, 'id' | 'create
   }
 }
 
+export async function updateStudentAction(studentId: string, studentData: Omit<Student, 'id' | 'createdAt' | 'predictionHistory' | 'riskScore'>) {
+    try {
+      const studentRef = doc(db, 'students', studentId);
+      await updateDoc(studentRef, studentData);
+  
+      revalidatePath('/dashboard');
+      revalidatePath(`/dashboard/student/${studentId}`);
+      revalidatePath(`/dashboard/student/${studentId}/edit`);
+      
+      return { success: true, id: studentId };
+    } catch (error: any) {
+      return { success: false, error: error.message };
+    }
+  }
+
 export async function bulkAddStudentsAction(students: Omit<Student, 'id' | 'createdAt' | 'predictionHistory'>[]) {
   if (students.length === 0 || students.length > 500) {
     return { success: false, error: 'Invalid number of students. Must be between 1 and 500.' };
