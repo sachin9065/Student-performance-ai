@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
 import Papa from 'papaparse';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/lib/auth';
 
 function DashboardSkeleton() {
     return (
@@ -37,6 +38,8 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const { user } = useAuth();
+
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -56,8 +59,10 @@ export default function DashboardPage() {
         setLoading(false);
       }
     };
-    fetchStudents();
-  }, []);
+    if (user) {
+        fetchStudents();
+    }
+  }, [user]);
 
   const handleExport = () => {
     if (students.length === 0) {
