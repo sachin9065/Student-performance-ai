@@ -6,7 +6,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { SignupForm } from '@/components/auth/signup-form';
 
 export default function SignupPage() {
-    const heroImage = PlaceHolderImages.find(p => p.id === 'login-background');
+    const heroImage = PlaceHolderImages.find(p => p.id === 'signup-background');
     return (
         <div className="w-full lg:grid lg:min-h-screen lg:grid-cols-2 xl:min-h-screen">
           <div className="flex items-center justify-center py-12">

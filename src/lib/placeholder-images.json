@@ -7,6 +7,12 @@
       "imageHint": "students classroom"
     },
     {
+      "id": "signup-background",
+      "description": "A group of diverse university students studying together in a library.",
+      "imageUrl": "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxzdHVkZW50cyUyMHN0dWR5aW5nfGVufDB8fHx8MTc1OTIzNjU5OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "students studying"
+    },
+    {
       "id": "feature-dashboard",
       "description": "A modern dashboard interface with various charts and graphs.",
       "imageUrl": "https://images.unsplash.com/photo-1613347761493-4060c969cd28?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxkYXNoYm9hcmQlMjBhbmFseXRpY3N8ZW58MHx8fHwxNzU4ODA3NDYzfDA&ixlib=rb-4.1.0&q=80&w=1080",
