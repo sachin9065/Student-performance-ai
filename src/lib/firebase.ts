@@ -12,21 +12,27 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-let app: FirebaseApp;
-let analytics: Analytics | undefined;
-if (!getApps().length) {
-  app = initializeApp(firebaseConfig);
-  if (typeof window !== 'undefined') {
-    analytics = getAnalytics(app);
-  }
-} else {
-  app = getApp();
-  if (typeof window !== 'undefined') {
-    analytics = getAnalytics(app);
-  }
-}
-
+// Initialize Firebase
+const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth: Auth = getAuth(app);
 const db: Firestore = getFirestore(app);
+let analytics: Analytics | undefined;
+
+if (typeof window !== 'undefined') {
+    if (!getApps().length) {
+        try {
+            analytics = getAnalytics(app);
+        } catch (error) {
+            console.log('Failed to initialize Analytics', error);
+        }
+    } else {
+        try {
+            analytics = getAnalytics();
+        } catch (error) {
+            console.log('Failed to get Analytics instance', error);
+        }
+    }
+}
+
 
 export { app, auth, db, analytics };
