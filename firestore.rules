@@ -1,0 +1,30 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if a user has the 'Admin' role.
+    function isAdmin() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin';
+    }
+
+    // Helper function to check if the requesting user is the owner of the document.
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Secure the 'users' collection
+    match /users/{userId} {
+      // Admins can read/write any user document.
+      // Users can only read/write their own document.
+      allow read, write: if isAdmin() || isOwner(userId);
+    }
+    
+    // Secure the 'students' collection
+    match /students/{studentId} {
+      // Only Admins can create, read, update, or delete student records.
+      allow read, create, update, delete: if isAdmin();
+    }
+  }
+}
