@@ -62,15 +62,38 @@ npm install
 6.  In the Firebase console, go to **Authentication** > **Sign-in method** and enable the "Email/Password" provider.
 7.  Go to **Firestore Database** and create a new database. Start in "test mode" for easy development (you should configure security rules for production). Create a collection named `students`.
 
-### 4. Add your TensorFlow.js Model
+## Model Management & Versioning
 
-The application comes with a placeholder for a client-side model. To use your own:
+The application loads a TensorFlow.js model from the `public/model/` directory. This allows you to update or switch models without changing the application code.
 
-1.  Make sure you have a TensorFlow/Keras model converted for web usage (typically a `model.json` file and one or more `groupX-shardXofX.bin` weight files).
-2.  Delete any existing files inside the `public/model/` directory.
-3.  Copy your `model.json` and all `.bin` weight files into the `public/model/` directory.
+### Updating the Active Model
 
-The model loading and preprocessing logic is located in `src/lib/model.ts`. You may need to adjust the `preprocess` function in this file to match the normalization and feature scaling your model expects.
+1.  **Convert Your Model**: Ensure your TensorFlow or Keras model is converted for web use. This typically results in a `model.json` file and one or more `groupX-shardXofX.bin` weight files.
+2.  **Replace Files**: Delete any existing files inside the `public/model/` directory.
+3.  **Copy New Files**: Copy your new `model.json` and all associated `.bin` weight files into the `public/model/` directory.
+4.  **Redeploy**: Deploy the application to make the new model active.
+
+The model loading and preprocessing logic is located in `src/lib/model.ts`. If your new model requires different input shapes or normalization, you may need to adjust the `preprocess` function in this file.
+
+### Versioning Models
+
+To maintain multiple versions of your model, we recommend a file-based versioning strategy within your project:
+
+1.  **Create Versioned Folders**: In the root of your project, create a directory (e.g., `ml-models/`) to store different versions of your model. Inside, create a folder for each version (e.g., `v1`, `v2`).
+
+    ```
+    ml-models/
+    ├── v1/
+    │   ├── model.json
+    │   └── group1-shard1of1.bin
+    └── v2/
+        ├── model.json
+        └── group1-shard1of1.bin
+    ```
+
+2.  **Switching Versions**: When you want to switch the active model, copy the contents from the desired version folder (e.g., `ml-models/v2/`) into the `public/model/` directory.
+
+This practice keeps your model artifacts organized and allows you to easily switch between versions by updating the files in the `public` directory and redeploying the application.
 
 ### 5. Run the development server
 
