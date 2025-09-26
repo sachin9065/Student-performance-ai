@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { LogOut, User as UserIcon, LayoutDashboard, PlusCircle, Upload } from 'lucide-radix-icons';
+import { LogOut, User as UserIcon } from 'lucide-react';
 import { SidebarTrigger } from '../ui/sidebar';
 import Link from 'next/link';
 
