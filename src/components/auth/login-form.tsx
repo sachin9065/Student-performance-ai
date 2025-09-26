@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -6,7 +7,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,8 +39,25 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormValues) => {
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
-      router.push('/dashboard');
+      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
+      const user = userCredential.user;
+
+      // Get user role from Firestore
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      if (userDoc.exists()) {
+        const userData = userDoc.data();
+        if (userData.role === 'Admin') {
+          router.push('/dashboard');
+        } else if (userData.role === 'Student') {
+          router.push('/student-dashboard');
+        } else {
+          // Default redirect if role is not set
+          router.push('/dashboard');
+        }
+      } else {
+        // Fallback for users created before roles were introduced
+        router.push('/dashboard');
+      }
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -52,7 +71,7 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4" suppressHydrationWarning>
         <FormField
           control={form.control}
           name="email"
