@@ -1,6 +1,4 @@
-'use client';
 
-import { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import type { Student } from '@/lib/types';
@@ -8,42 +6,15 @@ import { StudentCharts } from '@/components/dashboard/student-charts';
 import { DataTable } from '@/components/data-table/data-table';
 import { columns } from '@/components/data-table/columns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle, Download, Siren } from 'lucide-react';
+import { Siren } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
-import Papa from 'papaparse';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/lib/auth';
+import { ExportButton } from '@/components/dashboard/export-button';
 
-function DashboardSkeleton() {
-    return (
-      <div className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Skeleton className="h-28" />
-          <Skeleton className="h-28" />
-          <Skeleton className="h-28" />
-          <Skeleton className="h-28" />
-        </div>
-        <Skeleton className="h-[400px]" />
-        <Skeleton className="h-[400px]" />
-      </div>
-    );
-  }
-
-export default function DashboardPage() {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast();
-  const { user } = useAuth();
-
-
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
+async function getStudents(): Promise<Student[]> {
+    try {
         const studentsCollection = collection(db, 'students');
         const q = query(studentsCollection, orderBy('createdAt', 'desc'));
         const studentSnapshot = await getDocs(q);
@@ -51,66 +22,17 @@ export default function DashboardPage() {
           id: doc.id,
           ...doc.data(),
         } as Student));
-        setStudents(studentList);
-      } catch (err: any) {
-        setError('Failed to fetch student data. Please check your Firestore connection and permissions.');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (user) {
-        fetchStudents();
+        return studentList;
+    } catch (err: any) {
+        console.error('Failed to fetch student data:', err);
+        // In a real app, you might want to throw the error
+        // and let an error boundary handle it.
+        return []; 
     }
-  }, [user]);
+}
 
-  const handleExport = () => {
-    if (students.length === 0) {
-      toast({
-        variant: 'destructive',
-        title: 'No Data to Export',
-        description: 'There are no students in the roster to export.',
-      });
-      return;
-    }
-
-    // Sanitize data for CSV export, removing nested objects
-    const dataToExport = students.map(({ id, predictionHistory, createdAt, ...rest }) => ({
-        ...rest,
-        riskScore: rest.riskScore?.toFixed(3) || 'N/A',
-        createdAt: new Date(createdAt).toISOString(),
-    }));
-
-
-    const csv = Papa.unparse(dataToExport);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'students.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    toast({
-        title: 'Export Successful',
-        description: `${students.length} student records have been exported.`,
-    });
-  };
-
-  if (loading) {
-    return <DashboardSkeleton />;
-  }
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertTriangle className="h-4 w-4" />
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>{error}</AlertDescription>
-      </Alert>
-    );
-  }
+export default async function DashboardPage() {
+  const students = await getStudents();
   
   const totalStudents = students.length;
   const highRiskStudents = students.filter(s => s.riskScore && s.riskScore > 0.75);
@@ -125,10 +47,7 @@ export default function DashboardPage() {
                 <p className="text-muted-foreground">Welcome to your student analytics dashboard.</p>
             </div>
             <div className="flex gap-2">
-                <Button variant="outline" onClick={handleExport}>
-                    <Download className="mr-2 h-4 w-4" />
-                    Export to CSV
-                </Button>
+                <ExportButton students={students} />
                 <Button asChild>
                     <Link href="/dashboard/add-student"><PlusCircle className="mr-2 h-4 w-4" />Add Student</Link>
                 </Button>

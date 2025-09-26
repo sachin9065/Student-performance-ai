@@ -1,25 +1,20 @@
-'use client';
 
-import { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import type { Student } from '@/lib/types';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { AlertTriangle, User, Calendar, Percent, BookOpen, Star, Target, BrainCircuit, Activity, RefreshCw, History } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
+import { User, Calendar, Percent, BookOpen, Star, Target, BrainCircuit, Activity, History } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { format } from 'date-fns';
-import { updateStudentPredictionAction } from '@/actions/student-actions';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
-import { Loader2 } from 'lucide-react';
+} from "@/components/ui/accordion";
+import { UpdatePredictionButton } from '@/components/dashboard/update-prediction-button';
 
 async function getStudent(id: string): Promise<Student | null> {
     const docRef = doc(db, 'students', id);
@@ -53,58 +48,14 @@ function InfoCard({ icon: Icon, title, value, unit }: { icon: React.ElementType,
     );
 }
 
-export default function StudentDetailPage({ params }: { params: { id: string } }) {
-  const [student, setStudent] = useState<Student | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
-  const { toast } = useToast();
+export default async function StudentDetailPage({ params }: { params: { id: string } }) {
+  const student = await getStudent(params.id);
 
-  useEffect(() => {
-    const fetchStudent = async () => {
-      setLoading(true);
-      const studentData = await getStudent(params.id);
-      if (studentData) {
-        setStudent(studentData);
-      } else {
-        notFound();
-      }
-      setLoading(false);
-    };
-    fetchStudent();
-  }, [params.id]);
-
-  const handleUpdatePrediction = async () => {
-    setUpdating(true);
-    try {
-        const result = await updateStudentPredictionAction(params.id);
-        if (result.success && result.prediction) {
-            setStudent(prev => prev ? { ...prev, riskScore: result.prediction!.riskScore, predictionHistory: [...prev.predictionHistory, result.prediction!] } : null);
-            toast({
-                title: "Prediction Updated",
-                description: `New risk score is ${result.prediction.riskScore.toFixed(3)}.`
-            })
-        } else {
-            throw new Error(result.error || 'Failed to update prediction.');
-        }
-    } catch (error: any) {
-        toast({
-            variant: 'destructive',
-            title: 'Update Failed',
-            description: error.message
-        });
-    }
-    setUpdating(false);
-  }
-
-  if (loading || !student) {
-    return (
-        <div className="space-y-6">
-            <Card><CardHeader><CardTitle>Loading student data...</CardTitle></CardHeader></Card>
-        </div>
-    );
+  if (!student) {
+    notFound();
   }
   
-  const formattedHistory = student.predictionHistory.map(p => ({
+  const formattedHistory = (student.predictionHistory || []).map(p => ({
     date: format(new Date(p.createdAt), 'MMM d, yyyy'),
     riskScore: p.riskScore
   })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -118,10 +69,7 @@ export default function StudentDetailPage({ params }: { params: { id: string } }
                 <p className="text-muted-foreground">Student ID: {student.studentId}</p>
             </div>
             <div className="flex items-center gap-4">
-                <Button onClick={handleUpdatePrediction} disabled={updating}>
-                    {updating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
-                    Generate New Prediction
-                </Button>
+                <UpdatePredictionButton studentId={params.id} />
                 <div className="flex items-center gap-2">
                     <span className="text-muted-foreground font-medium">Latest Risk:</span>
                     <RiskBadge score={student.riskScore} />
@@ -134,7 +82,7 @@ export default function StudentDetailPage({ params }: { params: { id: string } }
                 <CardTitle className="flex items-center gap-2 font-headline"><BrainCircuit className="h-6 w-6 text-primary"/> Latest AI Predictive Insight</CardTitle>
             </CardHeader>
             <CardContent className="text-muted-foreground">
-                {student.predictionHistory.length > 0 ? (
+                {student.predictionHistory && student.predictionHistory.length > 0 ? (
                     <p>{student.predictionHistory[student.predictionHistory.length - 1].insight}</p>
                 ) : (
                     <p>No predictions available.</p>
@@ -170,7 +118,7 @@ export default function StudentDetailPage({ params }: { params: { id: string } }
         <Card>
             <CardHeader>
                 <CardTitle className="font-headline">Academic & Engagement Metrics</CardTitle>
-            </CardHeader>
+            </Header>
             <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <InfoCard icon={Percent} title="Attendance" value={student.attendancePercent} unit="%" />
                 <InfoCard icon={BookOpen} title="Study Hours / Week" value={student.studyHoursPerWeek} />
@@ -184,9 +132,9 @@ export default function StudentDetailPage({ params }: { params: { id: string } }
         <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-headline"><History className="h-6 w-6 text-primary"/> Prediction History</CardTitle>
-            </CardHeader>
+            </Header>
             <CardContent>
-                {student.predictionHistory.length > 0 ? (
+                {student.predictionHistory && student.predictionHistory.length > 0 ? (
                 <Accordion type="single" collapsible className="w-full">
                      {[...student.predictionHistory].reverse().map((p, index) => (
                         <AccordionItem value={`item-${index}`} key={p.createdAt}>
@@ -212,7 +160,7 @@ export default function StudentDetailPage({ params }: { params: { id: string } }
         <Card>
             <CardHeader>
                 <CardTitle className="font-headline">Student Overview</CardTitle>
-            </CardHeader>
+            </Header>
             <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 <InfoCard icon={User} title="Age" value={student.age} />
                 <InfoCard icon={User} title="Gender" value={student.gender} />
