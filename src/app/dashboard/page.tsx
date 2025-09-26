@@ -10,10 +10,12 @@ import { columns } from '@/components/data-table/columns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
+import Papa from 'papaparse';
+import { useToast } from '@/hooks/use-toast';
 
 function DashboardSkeleton() {
     return (
@@ -34,6 +36,7 @@ export default function DashboardPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -55,6 +58,40 @@ export default function DashboardPage() {
     };
     fetchStudents();
   }, []);
+
+  const handleExport = () => {
+    if (students.length === 0) {
+      toast({
+        variant: 'destructive',
+        title: 'No Data to Export',
+        description: 'There are no students in the roster to export.',
+      });
+      return;
+    }
+
+    // Sanitize data for CSV export, removing nested objects
+    const dataToExport = students.map(({ id, predictionHistory, createdAt, ...rest }) => ({
+        ...rest,
+        riskScore: rest.riskScore?.toFixed(3) || 'N/A',
+        createdAt: new Date(createdAt).toISOString(),
+    }));
+
+
+    const csv = Papa.unparse(dataToExport);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'students.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast({
+        title: 'Export Successful',
+        description: `${students.length} student records have been exported.`,
+    });
+  };
 
   if (loading) {
     return <DashboardSkeleton />;
@@ -83,6 +120,10 @@ export default function DashboardPage() {
                 <p className="text-muted-foreground">Welcome to your student analytics dashboard.</p>
             </div>
             <div className="flex gap-2">
+                <Button variant="outline" onClick={handleExport}>
+                    <Download className="mr-2 h-4 w-4" />
+                    Export to CSV
+                </Button>
                 <Button asChild>
                     <Link href="/dashboard/add-student"><PlusCircle className="mr-2 h-4 w-4" />Add Student</Link>
                 </Button>
