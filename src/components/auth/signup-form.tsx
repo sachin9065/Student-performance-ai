@@ -43,7 +43,7 @@ export function SignUpForm() {
         description: 'You have been successfully signed up. Redirecting to dashboard...',
       });
       router.push('/dashboard');
-    } catch (error: any) {
+    } catch (error: any)      {
       toast({
         variant: 'destructive',
         title: 'Sign Up Failed',
@@ -64,7 +64,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="name@example.com" {...field} suppressHydrationWarning />
+                <Input placeholder="name@example.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -77,7 +77,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" {...field} suppressHydrationWarning />
+                <Input type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
