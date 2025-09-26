@@ -1,3 +1,9 @@
+export interface Prediction {
+  riskScore: number;
+  insight: string;
+  createdAt: number;
+}
+
 export interface Student {
   id: string; // Firestore document ID
   studentId: string;
@@ -10,7 +16,7 @@ export interface Student {
   assignmentsScore: number;
   participationScore: number;
   extraCurricularScore: number;
-  riskScore?: number;
-  label?: string; // Optional field
+  riskScore?: number; // Latest risk score
+  predictionHistory: Prediction[];
   createdAt: number; // Unix timestamp
 }

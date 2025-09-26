@@ -12,7 +12,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { runInference } from '@/lib/model';
 import { bulkAddStudentsAction } from '@/actions/student-actions';
 import { Loader2, UploadCloud, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -102,14 +101,7 @@ export default function BulkUploadPage() {
         return student;
       });
 
-      const studentsWithScores = await Promise.all(
-        studentsToProcess.map(async (student) => {
-          const riskScore = await runInference({ ...student, id: '', createdAt: 0 });
-          return { ...student, riskScore, createdAt: Date.now() };
-        })
-      );
-      
-      const result = await bulkAddStudentsAction(studentsWithScores);
+      const result = await bulkAddStudentsAction(studentsToProcess);
 
       if (result.success) {
         toast({
@@ -205,7 +197,7 @@ export default function BulkUploadPage() {
               </Alert>
             )}
             <div className="mt-6 flex justify-end">
-              <Button onClick={handleUpload} disabled={loading || errors.length > 0}>
+              <Button onClick={handleUpload} disabled={loading || errors.length > 0} suppressHydrationWarning>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Confirm and Upload
               </Button>

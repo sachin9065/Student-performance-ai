@@ -12,7 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-import { runInference } from '@/lib/model';
 import { addStudentAction } from '@/actions/student-actions';
 
 const formSchema = z.object({
@@ -54,16 +53,7 @@ export default function AddStudentPage() {
   const onSubmit = async (data: StudentFormValues) => {
     setLoading(true);
     try {
-      const studentDataForInference = { ...data, id: '', createdAt: 0 };
-      const riskScore = await runInference(studentDataForInference);
-
-      const studentDataToSave = {
-        ...data,
-        riskScore,
-        createdAt: Date.now(),
-      };
-      
-      const result = await addStudentAction(studentDataToSave);
+      const result = await addStudentAction(data);
       
       if (result.success) {
         toast({
@@ -178,7 +168,7 @@ export default function AddStudentPage() {
                 )} />
             </div>
             <div className="flex justify-end">
-              <Button type="submit" disabled={loading}>
+              <Button type="submit" disabled={loading} suppressHydrationWarning>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Add Student
               </Button>
