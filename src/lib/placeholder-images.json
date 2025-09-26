@@ -5,6 +5,30 @@
       "description": "Abstract purple and blue geometric patterns on a dark background, suggesting technology and data.",
       "imageUrl": "https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YWJzdHJhY3QlMjBkYXRhfGVufDB8fHx8MTc1ODc4NjYwMHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "abstract data"
+    },
+    {
+      "id": "feature-dashboard",
+      "description": "A modern dashboard interface with various charts and graphs.",
+      "imageUrl": "https://images.unsplash.com/photo-1613347761493-4060c969cd28?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxkYXNoYm9hcmQlMjBhbmFseXRpY3N8ZW58MHx8fHwxNzU4ODA3NDYzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dashboard analytics"
+    },
+    {
+      "id": "feature-ai",
+      "description": "An abstract representation of an AI brain with glowing circuits.",
+      "imageUrl": "https://images.unsplash.com/photo-1709651669999-57741c9bf085?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxBSSUyMGJyYWlufGVufDB8fHx8MTc1ODgxNzY3N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "AI brain"
+    },
+    {
+      "id": "feature-data",
+      "description": "A person entering data into a spreadsheet on a laptop.",
+      "imageUrl": "https://images.unsplash.com/photo-1640158615573-cd28feb1bf4e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8ZGF0YSUyMGVudHJ5fGVufDB8fHx8MTc1ODgxNzQ4OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "data entry"
+    },
+    {
+      "id": "feature-security",
+      "description": "A digital shield icon representing data security.",
+      "imageUrl": "https://images.unsplash.com/photo-1667372283545-1261fb5c427a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxkYXRhJTIwc2VjdXJpdHl8ZW58MHx8fHwxNzU4ODEwNzgzfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "data security"
     }
   ]
 }

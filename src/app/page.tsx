@@ -4,12 +4,21 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { School, BrainCircuit, ShieldCheck, BarChart, Users } from 'lucide-react';
+import type { ImagePlaceholder } from '@/lib/placeholder-images';
 
-const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementType, title: string, description: string }) => (
-    <div className="flex flex-col items-center p-6 text-center">
-        <div className="mb-4 rounded-full bg-primary/10 p-4 text-primary">
-            <Icon className="h-8 w-8" />
-        </div>
+const FeatureCard = ({ image, title, description }: { image: ImagePlaceholder | undefined, title: string, description: string }) => (
+    <div className="flex flex-col items-center p-6 text-center border rounded-lg bg-card shadow-sm">
+        {image && (
+            <div className="mb-4 rounded-lg overflow-hidden w-full aspect-video relative">
+                <Image
+                    src={image.imageUrl}
+                    alt={image.description}
+                    data-ai-hint={image.imageHint}
+                    fill
+                    className="object-cover"
+                />
+            </div>
+        )}
         <h3 className="mb-2 text-xl font-bold font-headline">{title}</h3>
         <p className="text-muted-foreground">{description}</p>
     </div>
@@ -17,6 +26,11 @@ const FeatureCard = ({ icon: Icon, title, description }: { icon: React.ElementTy
 
 export default function HomePage() {
   const heroImage = PlaceHolderImages.find(p => p.id === 'login-background');
+  const featureDashboard = PlaceHolderImages.find(p => p.id === 'feature-dashboard');
+  const featureAI = PlaceHolderImages.find(p => p.id === 'feature-ai');
+  const featureData = PlaceHolderImages.find(p => p.id === 'feature-data');
+  const featureSecurity = PlaceHolderImages.find(p => p.id === 'feature-security');
+
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -51,7 +65,7 @@ export default function HomePage() {
               </Button>
             </div>
           </div>
-          <div className="relative h-64 w-full overflow-hidden rounded-xl md:h-auto">
+          <div className="relative h-64 w-full overflow-hidden rounded-xl md:h-auto md:aspect-video">
             {heroImage && (
                 <Image
                     src={heroImage.imageUrl}
@@ -61,7 +75,7 @@ export default function HomePage() {
                     className="object-cover"
                 />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
           </div>
         </section>
 
@@ -76,22 +90,22 @@ export default function HomePage() {
                 </div>
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
                     <FeatureCard 
-                        icon={BarChart} 
+                        image={featureDashboard}
                         title="Comprehensive Dashboard" 
                         description="Visualize student data, track trends, and monitor risk levels with an intuitive and interactive dashboard." 
                     />
                     <FeatureCard 
-                        icon={BrainCircuit} 
+                        image={featureAI} 
                         title="AI-Powered Insights" 
                         description="Leverage generative AI to get predictive insights and understand the 'why' behind each student's risk score." 
                     />
                     <FeatureCard 
-                        icon={Users} 
+                        image={featureData}
                         title="Easy Data Management" 
                         description="Quickly add individual students or perform bulk uploads via CSV to get your roster set up in minutes." 
                     />
                     <FeatureCard 
-                        icon={ShieldCheck} 
+                        image={featureSecurity}
                         title="Secure & Reliable" 
                         description="Built on Firebase, ensuring your data is secure and the platform is scalable to your needs." 
                     />
