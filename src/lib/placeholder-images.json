@@ -2,9 +2,9 @@
   "placeholderImages": [
     {
       "id": "login-background",
-      "description": "Abstract purple and blue geometric patterns on a dark background, suggesting technology and data.",
-      "imageUrl": "https://images.unsplash.com/photo-1496096265110-f83ad7f96608?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YWJzdHJhY3QlMjBkYXRhfGVufDB8fHx8MTc1ODc4NjYwMHww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "abstract data"
+      "description": "Abstract red and black digital art with flowing lines and a sense of movement.",
+      "imageUrl": "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHJlZCUyMGJsYWNrfGVufDB8fHx8MTc1ODg5MzIwNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "abstract red"
     },
     {
       "id": "feature-dashboard",
