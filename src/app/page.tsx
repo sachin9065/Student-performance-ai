@@ -26,8 +26,11 @@ export default function HomePage() {
             <span className="text-xl font-bold font-headline">Risk Insights</span>
         </Link>
         <nav className="flex items-center gap-4">
+            <Button variant="ghost" asChild>
+                <Link href="/login">Log In</Link>
+            </Button>
             <Button asChild>
-                <Link href="/dashboard">Dashboard</Link>
+                <Link href="/signup">Sign Up</Link>
             </Button>
         </nav>
       </header>
@@ -44,7 +47,7 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button size="lg" asChild>
-                <Link href="/dashboard">Access Dashboard</Link>
+                <Link href="/signup">Get Started Free</Link>
               </Button>
             </div>
           </div>
@@ -106,7 +109,7 @@ export default function HomePage() {
                     </p>
                     <div className="mt-8">
                         <Button size="lg" asChild>
-                            <Link href="/dashboard">Get Started</Link>
+                            <Link href="/signup">Get Started</Link>
                         </Button>
                     </div>
                 </div>

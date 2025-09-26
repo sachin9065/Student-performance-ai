@@ -20,3 +20,10 @@ export interface Student {
   predictionHistory: Prediction[];
   createdAt: number; // Unix timestamp
 }
+
+export interface UserProfile {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  role: 'Admin' | 'Student';
+}

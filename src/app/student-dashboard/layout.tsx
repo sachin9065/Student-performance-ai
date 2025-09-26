@@ -4,7 +4,7 @@ import { AppSidebar } from '@/components/layout/app-sidebar';
 import { AppHeader } from '@/components/layout/app-header';
 import { AuthGuard } from '@/lib/auth';
 
-export default function DashboardLayout({
+export default function StudentDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
