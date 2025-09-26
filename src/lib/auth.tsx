@@ -56,13 +56,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (loading) return;
 
     const isAuthPage = pathname === '/login' || pathname === '/signup';
+    const isStudentDashboard = pathname.startsWith('/student-dashboard');
+    const isAdminDashboard = pathname.startsWith('/dashboard');
 
     if (userRole) {
       if (isAuthPage) {
         router.push(userRole === 'Admin' ? '/dashboard' : '/student-dashboard');
-      } else if (userRole === 'Admin' && (pathname.startsWith('/student-dashboard'))) {
+      } else if (userRole === 'Admin' && isStudentDashboard) {
         router.push('/dashboard');
-      } else if (userRole === 'Student' && (pathname.startsWith('/dashboard'))) {
+      } else if (userRole === 'Student' && isAdminDashboard) {
         router.push('/student-dashboard');
       }
     } else if (!isAuthPage && pathname !== '/') {
@@ -90,12 +92,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = () => {
-    return firebaseSignOut(auth);
+    return firebaseSignOut(auth).then(() => {
+        router.push('/login');
+    });
   };
 
   const value = { user, userProfile, userRole, loading, signIn, signUp, signOut };
 
-  if (loading && pathname !== '/') {
+  if (loading && !pathname.startsWith('/_next') && pathname !== '/') {
     return (
         <div className="flex h-screen items-center justify-center">
             <Loader2 className="h-16 w-16 animate-spin text-primary" />

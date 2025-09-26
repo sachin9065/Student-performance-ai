@@ -24,7 +24,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 async function getStudentProfile(email: string): Promise<Student | null> {
     if (!email) return null;
     const studentsRef = collection(db, 'students');
-    const q = query(studentsRef, where('studentId', '==', email), where('name', '==', 'Jane Doe'));
+    const q = query(studentsRef, where('studentId', '==', email));
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
@@ -194,7 +194,7 @@ export default function StudentProfilePage() {
         <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-headline"><History className="h-6 w-6 text-primary"/> Prediction History</CardTitle>
-            </CardHeader>
+            </Header>
             <CardContent>
                 {student.predictionHistory.length > 0 ? (
                 <Accordion type="single" collapsible className="w-full">
