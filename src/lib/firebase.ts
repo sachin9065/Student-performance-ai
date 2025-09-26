@@ -7,7 +7,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyAO4VDDZwRkpyp1pIgaHMRlEONuBGNCETQ",
   authDomain: "predictive-analytics-85582.firebaseapp.com",
   projectId: "predictive-analytics-85582",
-  storageBucket: "predictive-analytics-85582.appspot.com",
+  storageBucket: "predictive-analytics-85582.firebasestorage.app",
   messagingSenderId: "2841254081",
   appId: "1:2841254081:web:829fb912bdb2399ba5dc40",
   measurementId: "G-D1G9ZHWEG7"
