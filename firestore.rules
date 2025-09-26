@@ -1,57 +1,50 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-  
-    // Helper function to get the user's role from the 'users' collection
-    function getUserRole(userId) {
-      return get(/databases/$(database)/documents/users/$(userId)).data.role;
-    }
-    
-    // Helper function to check if the user is an Admin
+
+    // Helper functions
     function isAdmin() {
-      return request.auth != null && getUserRole(request.auth.uid) == 'Admin';
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Admin';
     }
 
-    // Helper function to check if the user is a Student
     function isStudent() {
-      return request.auth != null && getUserRole(request.auth.uid) == 'Student';
-    }
-
-    // Secure the 'users' collection
-    match /users/{userId} {
-      // Users can read their own profile, Admins can read any profile
-      allow read: if request.auth.uid == userId || isAdmin();
-      // Users can create their own profile during signup
-      allow create: if request.auth.uid == userId;
-      // Users cannot change their role
-      allow update: if request.auth.uid == userId && request.resource.data.role == resource.data.role;
-    }
-
-    // Secure the 'students' collection
-    match /students/{studentId} {
-      // Admins can read all student records.
-      // Students can read their own record if their email matches the studentId field.
-      allow read: if isAdmin() || (isStudent() && resource.data.studentId == request.auth.token.email);
-      
-      // Admins can create, update, and delete any student record.
-      allow write: if isAdmin();
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'Student';
     }
     
-    // Validation rules for student data on create and update
-    match /students/{studentDocId} {
-        allow create, update: if isAdmin() &&
-            request.resource.data.name is string &&
-            request.resource.data.studentId is string &&
-            request.resource.data.age is number && request.resource.data.age > 0 &&
-            request.resource.data.gender is string && request.resource.data.gender in ['Male', 'Female', 'Other'] &&
-            request.resource.data.attendancePercent is number && request.resource.data.attendancePercent >= 0 && request.resource.data.attendancePercent <= 100 &&
-            request.resource.data.studyHoursPerWeek is number && request.resource.data.studyHoursPerWeek >= 0 &&
-            request.resource.data.previousMarks is number && request.resource.data.previousMarks >= 0 && request.resource.data.previousMarks <= 100 &&
-            request.resource.data.assignmentsScore is number && request.resource.data.assignmentsScore >= 0 && request.resource.data.assignmentsScore <= 100 &&
-            request.resource.data.participationScore is number && request.resource.data.participationScore >= 0 && request.resource.data.participationScore <= 100 &&
-            request.resource.data.extraCurricularScore is number && request.resource.data.extraCurricularScore >= 0 && request.resource.data.extraCurricularScore <= 100;
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Secure the users collection
+    match /users/{userId} {
+      // Users can only read their own profile, admins can read any profile
+      allow read: if isOwner(userId) || isAdmin();
+      // On create, a user can create their own profile, role must be 'Student' or 'Admin'
+      allow create: if isOwner(userId) && request.resource.data.role in ['Admin', 'Student'];
+      // Users cannot update their profile (especially their role)
+      allow update: if false; 
+      allow delete: if isAdmin(); // Only admins can delete user profiles
+    }
+
+    // Secure the students collection
+    match /students/{studentId} {
+      allow read: if isAdmin() || (isStudent() && resource.data.studentId == request.auth.token.email);
+      allow create, update: if isAdmin() &&
+                          request.resource.data.name is string &&
+                          request.resource.data.age is number && request.resource.data.age > 0 &&
+                          request.resource.data.gender is string && request.resource.data.gender in ['Male', 'Female', 'Other'] &&
+                          request.resource.data.attendancePercent is number && request.resource.data.attendancePercent >= 0 && request.resource.data.attendancePercent <= 100 &&
+                          request.resource.data.studyHoursPerWeek is number && request.resource.data.studyHoursPerWeek >= 0 &&
+                          request.resource.data.previousMarks is number && request.resource.data.previousMarks >= 0 && request.resource.data.previousMarks <= 100 &&
+                          request.resource.data.assignmentsScore is number && request.resource.data.assignmentsScore >= 0 && request.resource.data.assignmentsScore <= 100 &&
+                          request.resource.data.participationScore is number && request.resource.data.participationScore >= 0 && request.resource.data.participationScore <= 100 &&
+                          request.resource.data.extraCurricularScore is number && request.resource.data.extraCurricularScore >= 0 && request.resource.data.extraCurricularScore <= 100 &&
+                          request.resource.data.createdAt == request.time;
+      allow delete: if isAdmin();
+      
+      // Default deny all
+      allow write: if false;
     }
   }
 }
