@@ -14,7 +14,7 @@ export default function LoginPage() {
               <div className="grid gap-2 text-center">
                 <Link href="/" className="flex items-center justify-center gap-2 mb-4">
                     <School className="h-8 w-8 text-primary" />
-                    <span className="text-xl font-bold font-headline">Risk Insights</span>
+                    <span className="text-xl font-bold font-headline">Predictive Analytics for Student Performance</span>
                 </Link>
                 <h1 className="text-3xl font-bold font-headline">Welcome Back</h1>
                 <p className="text-balance text-muted-foreground">

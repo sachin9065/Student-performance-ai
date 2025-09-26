@@ -1,6 +1,6 @@
-# Risk Insights
+# Predictive Analytics for Student Performance
 
-Risk Insights is a full-stack web application built with Next.js, Firebase, and TensorFlow.js. It's designed for educators to identify students who may be at risk of falling behind. The application provides a dashboard to visualize student data, calculate risk scores using a machine learning model, and generate predictive insights using GenAI.
+Predictive Analytics for Student Performance is a full-stack web application built with Next.js, Firebase, and TensorFlow.js. It's designed for educators to identify students who may be at risk of falling behind. The application provides a dashboard to visualize student data, calculate risk scores using a machine learning model, and generate predictive insights using GenAI.
 
 ## Features
 
@@ -33,7 +33,7 @@ Risk Insights is a full-stack web application built with Next.js, Firebase, and 
 
 ```bash
 git clone <repository-url>
-cd risk-insights
+cd predictive-analytics-student-performance
 ```
 
 ### 2. Install dependencies

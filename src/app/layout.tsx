@@ -5,7 +5,7 @@ import { AuthProvider } from '@/lib/auth';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'Risk Insights',
+  title: 'Predictive Analytics for Student Performance',
   description: 'AI-powered student risk analysis',
 };
 

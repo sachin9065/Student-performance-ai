@@ -37,7 +37,7 @@ export default function HomePage() {
       <header className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2">
             <School className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold font-headline">Risk Insights</span>
+            <span className="text-xl font-bold font-headline">Predictive Analytics for Student Performance</span>
         </Link>
         <nav className="flex items-center gap-4">
             <Button variant="ghost" asChild>
@@ -57,7 +57,7 @@ export default function HomePage() {
               Empower Educators with AI-Powered Student Insights
             </h1>
             <p className="max-w-[600px] text-lg text-muted-foreground">
-              Risk Insights helps you identify at-risk students early, providing data-driven analytics and predictive insights to foster academic success.
+              Predictive Analytics for Student Performance helps you identify at-risk students early, providing data-driven analytics and predictive insights to foster academic success.
             </p>
             <div className="flex flex-col gap-4 sm:flex-row">
               <Button size="lg" asChild>
@@ -135,9 +135,9 @@ export default function HomePage() {
         <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 py-6 md:flex-row md:px-6">
           <div className="flex items-center gap-2">
             <School className="h-6 w-6 text-primary" />
-            <p className="text-sm font-bold">Risk Insights</p>
+            <p className="text-sm font-bold">Predictive Analytics for Student Performance</p>
           </div>
-          <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Risk Insights. All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">&copy; {new Date().getFullYear()} Predictive Analytics for Student Performance. All rights reserved.</p>
         </div>
       </footer>
     </div>

@@ -23,7 +23,7 @@ export function AppSidebar() {
         <SidebarHeader className="p-4">
             <Link href="/" className="flex items-center gap-2">
                 <School className="w-8 h-8 text-primary" />
-                <h2 className="text-xl font-bold font-headline">Risk Insights</h2>
+                <h2 className="text-xl font-bold font-headline">Predictive Analytics</h2>
             </Link>
         </SidebarHeader>
 
