@@ -11,28 +11,10 @@ import {
   SidebarMenuButton,
   SidebarFooter,
 } from '@/components/ui/sidebar'
-import { School, BarChart, Plus, Upload, User, LogOut } from 'lucide-react'
-import { Button } from '../ui/button'
-import { signOut } from 'firebase/auth'
-import { auth } from '@/lib/firebase'
-import { useRouter } from 'next/navigation'
-import { useAuth } from '@/lib/auth'
-import { Avatar, AvatarFallback } from '../ui/avatar'
+import { School, BarChart, Plus, Upload } from 'lucide-react'
 
 export function AppSidebar() {
     const pathname = usePathname()
-    const router = useRouter()
-    const { user } = useAuth()
-
-    const handleLogout = async () => {
-        await signOut(auth);
-        router.push('/login');
-      };
-
-    const getInitials = (email: string | null | undefined) => {
-        if (!email) return 'U';
-        return email[0].toUpperCase();
-    };
 
   return (
       <Sidebar>
@@ -81,15 +63,8 @@ export function AppSidebar() {
         
         <SidebarFooter className="p-4 border-t">
             <div className="flex items-center gap-3">
-                <Avatar className="h-9 w-9">
-                    <AvatarFallback>{getInitials(user?.email)}</AvatarFallback>
-                </Avatar>
                 <div className="flex flex-col">
-                    <span className="text-sm font-medium text-foreground truncate">{user?.email}</span>
-                    <Button variant="link" size="sm" className="h-auto p-0 justify-start text-muted-foreground" onClick={handleLogout}>
-                        <LogOut className="w-3 h-3 mr-1" />
-                        Logout
-                    </Button>
+                    <span className="text-sm text-muted-foreground">© {new Date().getFullYear()} Risk Insights</span>
                 </div>
             </div>
         </SidebarFooter>

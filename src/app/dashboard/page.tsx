@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import type { Student } from '@/lib/types';
-import { useAuth } from '@/lib/auth';
 import { StudentCharts } from '@/components/dashboard/student-charts';
 import { DataTable } from '@/components/data-table/data-table';
 import { columns } from '@/components/data-table/columns';
@@ -32,33 +31,30 @@ function DashboardSkeleton() {
   }
 
 export default function DashboardPage() {
-  const { user } = useAuth();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (user) {
-      const fetchStudents = async () => {
-        try {
-          const studentsCollection = collection(db, 'students');
-          const q = query(studentsCollection, orderBy('createdAt', 'desc'));
-          const studentSnapshot = await getDocs(q);
-          const studentList = studentSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          } as Student));
-          setStudents(studentList);
-        } catch (err: any) {
-          setError('Failed to fetch student data. Please check your Firestore connection and permissions.');
-          console.error(err);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchStudents();
-    }
-  }, [user]);
+    const fetchStudents = async () => {
+      try {
+        const studentsCollection = collection(db, 'students');
+        const q = query(studentsCollection, orderBy('createdAt', 'desc'));
+        const studentSnapshot = await getDocs(q);
+        const studentList = studentSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        } as Student));
+        setStudents(studentList);
+      } catch (err: any) {
+        setError('Failed to fetch student data. Please check your Firestore connection and permissions.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStudents();
+  }, []);
 
   if (loading) {
     return <DashboardSkeleton />;
