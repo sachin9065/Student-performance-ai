@@ -10,7 +10,7 @@ import { columns } from '@/components/data-table/columns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertTriangle, Download } from 'lucide-react';
+import { AlertTriangle, Download, Siren } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
@@ -108,7 +108,7 @@ export default function DashboardPage() {
   }
   
   const totalStudents = students.length;
-  const highRiskStudents = students.filter(s => s.riskScore && s.riskScore > 0.75).length;
+  const highRiskStudents = students.filter(s => s.riskScore && s.riskScore > 0.75);
   const avgAttendance = totalStudents > 0 ? students.reduce((acc, s) => acc + s.attendancePercent, 0) / totalStudents : 0;
   const avgPerformance = totalStudents > 0 ? students.reduce((acc, s) => acc + s.previousMarks, 0) / totalStudents : 0;
 
@@ -130,6 +130,26 @@ export default function DashboardPage() {
             </div>
         </div>
 
+        {highRiskStudents.length > 0 && (
+            <Alert variant="destructive">
+                <Siren className="h-4 w-4" />
+                <AlertTitle>High-Risk Student Alert</AlertTitle>
+                <AlertDescription>
+                    The following students have a high risk score and may require immediate attention:
+                    <ul className="mt-2 list-disc list-inside">
+                        {highRiskStudents.map(student => (
+                            <li key={student.id}>
+                                <Button variant="link" className="p-0 h-auto" asChild>
+                                    <Link href={`/dashboard/student/${student.id}`}>{student.name}</Link>
+                                </Button>
+                                 (Risk Score: {student.riskScore?.toFixed(2)})
+                            </li>
+                        ))}
+                    </ul>
+                </AlertDescription>
+            </Alert>
+        )}
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -144,7 +164,7 @@ export default function DashboardPage() {
                     <CardTitle className="text-sm font-medium">High-Risk Students</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-2xl font-bold">{highRiskStudents}</div>
+                    <div className="text-2xl font-bold">{highRiskStudents.length}</div>
                 </CardContent>
             </Card>
             <Card>
