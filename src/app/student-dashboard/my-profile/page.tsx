@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -120,7 +119,7 @@ export default function StudentProfilePage() {
     return null; // Should be handled by error state
   }
   
-  const formattedHistory = student.predictionHistory.map(p => ({
+  const formattedHistory = (student.predictionHistory || []).map(p => ({
     date: format(new Date(p.createdAt), 'MMM d, yyyy'),
     riskScore: p.riskScore
   })).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -144,7 +143,7 @@ export default function StudentProfilePage() {
                 <CardTitle className="flex items-center gap-2 font-headline"><BrainCircuit className="h-6 w-6 text-primary"/> Latest AI Predictive Insight</CardTitle>
             </CardHeader>
             <CardContent className="text-muted-foreground">
-                {student.predictionHistory.length > 0 ? (
+                {student.predictionHistory && student.predictionHistory.length > 0 ? (
                     <p>{student.predictionHistory[student.predictionHistory.length - 1].insight}</p>
                 ) : (
                     <p>No predictions available.</p>
@@ -196,7 +195,7 @@ export default function StudentProfilePage() {
                 <CardTitle className="flex items-center gap-2 font-headline"><History className="h-6 w-6 text-primary"/> Prediction History</CardTitle>
             </Header>
             <CardContent>
-                {student.predictionHistory.length > 0 ? (
+                {student.predictionHistory && student.predictionHistory.length > 0 ? (
                 <Accordion type="single" collapsible className="w-full">
                      {[...student.predictionHistory].reverse().map((p, index) => (
                         <AccordionItem value={`item-${index}`} key={p.createdAt}>
