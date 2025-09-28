@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarFooter,
 } from '@/components/ui/sidebar'
-import { School, BarChart, Plus, Upload, User, LayoutDashboard, FileText, LogOut } from 'lucide-react'
+import { School, BarChart, Plus, Upload, User, LayoutDashboard, FileText, LogOut, BrainCircuit } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 import { Button } from '../ui/button'
 
@@ -74,6 +74,17 @@ export function AppSidebar() {
                         <span>Reports</span>
                         </SidebarMenuButton>
                     </Link>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                        <Link href="/dashboard/chatbot" passHref>
+                            <SidebarMenuButton
+                            isActive={pathname === '/dashboard/chatbot'}
+                            tooltip="AI Assistant"
+                            >
+                            <BrainCircuit />
+                            <span>AI Assistant</span>
+                            </SidebarMenuButton>
+                        </Link>
                     </SidebarMenuItem>
                 </>
             )}
