@@ -1,4 +1,5 @@
 
+
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import type { Student } from '@/lib/types';
@@ -86,7 +87,7 @@ export default async function DashboardPage() {
             <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">High-Risk Students</CardTitle>
-                </CardHeader>
+                </Header>
                 <CardContent>
                     <div className="text-2xl font-bold">{highRiskStudents.length}</div>
                 </CardContent>
@@ -108,24 +109,24 @@ export default async function DashboardPage() {
                 </CardContent>
             </Card>
         </div>
-      
+
         <Card>
             <CardHeader>
-                <CardTitle>Student Analytics</CardTitle>
-                <CardDescription>Visualize student data trends.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <StudentCharts students={students} />
-            </CardContent>
-        </Card>
-        
-        <Card>
-            <CardHeader>
-                <CardTitle>Student Roster</CardTitle>
-                <CardDescription>A list of all students in the system.</CardDescription>
+                <CardTitle className="font-headline text-2xl">Student Data</CardTitle>
+                <CardDescription>Browse, search, and manage all student records.</CardDescription>
             </CardHeader>
             <CardContent>
                 <DataTable columns={columns} data={students} />
+            </CardContent>
+        </Card>
+
+        <Card>
+            <CardHeader>
+                <CardTitle className="font-headline text-2xl">Analytics Overview</CardTitle>
+                <CardDescription>Visualize trends in student performance and engagement.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <StudentCharts students={students} />
             </CardContent>
         </Card>
     </div>
