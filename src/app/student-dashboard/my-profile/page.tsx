@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -59,7 +60,6 @@ export default function StudentProfilePage() {
   useEffect(() => {
     async function fetchStudent() {
       if (!user || !user.email) {
-        setError("You must be logged in to view your profile.");
         setLoading(false);
         return;
       }
@@ -78,7 +78,11 @@ export default function StudentProfilePage() {
       }
     }
 
-    fetchStudent();
+    if (user) {
+        fetchStudent();
+    } else {
+        setLoading(false);
+    }
   }, [user]);
 
   if (loading) {
@@ -163,7 +167,7 @@ export default function StudentProfilePage() {
         <Card>
             <CardHeader>
                 <CardTitle className="font-headline">Your Academic & Engagement Metrics</CardTitle>
-            </Header>
+            </CardHeader>
             <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <InfoCard icon={Percent} title="Attendance" value={student.attendancePercent} unit="%" />
                 <InfoCard icon={BookOpen} title="Study Hours / Week" value={student.studyHoursPerWeek} />
@@ -177,7 +181,7 @@ export default function StudentProfilePage() {
         <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-headline"><History className="h-6 w-6 text-primary"/> Prediction History</CardTitle>
-            </Header>
+            </CardHeader>
             <CardContent>
                 {student.predictionHistory && student.predictionHistory.length > 0 ? (
                 <Accordion type="single" collapsible className="w-full">
@@ -205,7 +209,7 @@ export default function StudentProfilePage() {
         <Card>
             <CardHeader>
                 <CardTitle className="font-headline">Your Overview</CardTitle>
-            </Header>
+            </CardHeader>
             <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 <InfoCard icon={User} title="Age" value={student.age} />
                 <InfoCard icon={User} title="Gender" value={student.gender} />
@@ -216,3 +220,5 @@ export default function StudentProfilePage() {
     </div>
   );
 }
+
+  
