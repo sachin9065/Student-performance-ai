@@ -18,6 +18,8 @@ import { UpdatePredictionButton } from '@/components/dashboard/update-prediction
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Pencil } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Image from 'next/image';
 
 async function getStudent(id: string): Promise<Student | null> {
     const docRef = doc(db, 'students', id);
@@ -67,9 +69,15 @@ export default async function StudentDetailPage({ params }: { params: { id: stri
   return (
     <div className="space-y-6">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-            <div>
-                <h1 className="text-3xl font-bold font-headline">{student.name}</h1>
-                <p className="text-muted-foreground">Student ID: {student.studentId}</p>
+            <div className="flex items-center gap-4">
+              <Avatar className="h-20 w-20 border">
+                  <AvatarImage src={student.photoURL} alt={student.name} />
+                  <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div>
+                  <h1 className="text-3xl font-bold font-headline">{student.name}</h1>
+                  <p className="text-muted-foreground">Student ID: {student.studentId}</p>
+              </div>
             </div>
             <div className="flex items-center flex-wrap gap-2">
                 <Button asChild variant="outline">

@@ -11,6 +11,7 @@ export interface Student {
   name: string;
   age: number;
   gender: 'Male' | 'Female' | 'Other';
+  photoURL?: string;
   attendancePercent: number;
   studyHoursPerWeek: number;
   previousMarks: number;

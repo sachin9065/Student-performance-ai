@@ -23,6 +23,7 @@ const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   age: z.coerce.number().int().positive('Age must be a positive number'),
   gender: z.enum(['Male', 'Female', 'Other']),
+  photoURL: z.string().url().optional().or(z.literal('')),
   attendancePercent: z.coerce.number().min(0).max(100, 'Must be between 0 and 100'),
   studyHoursPerWeek: z.coerce.number().min(0, 'Must be a positive number'),
   previousMarks: z.coerce.number().min(0).max(100, 'Must be between 0 and 100'),
@@ -101,6 +102,7 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
             name: studentData.name,
             age: studentData.age,
             gender: studentData.gender,
+            photoURL: studentData.photoURL,
             attendancePercent: studentData.attendancePercent,
             studyHoursPerWeek: studentData.studyHoursPerWeek,
             previousMarks: studentData.previousMarks,
@@ -191,6 +193,13 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
                     </FormItem>
                 )} />
             </div>
+            <FormField control={form.control} name="photoURL" render={({ field }) => (
+                <FormItem>
+                <FormLabel>Photo URL</FormLabel>
+                <FormControl><Input placeholder="https://example.com/photo.jpg" {...field} /></FormControl>
+                <FormMessage />
+                </FormItem>
+            )} />
             <div className="grid md:grid-cols-3 gap-6">
                 <FormField control={form.control} name="attendancePercent" render={({ field }) => (
                     <FormItem>
