@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarFooter,
 } from '@/components/ui/sidebar'
-import { School, BarChart, Plus, Upload, User, LayoutDashboard } from 'lucide-react'
+import { School, BarChart, Plus, Upload, User, LayoutDashboard, FileText } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 
 export function AppSidebar() {
@@ -60,6 +60,17 @@ export function AppSidebar() {
                         >
                         <Upload />
                         <span>Bulk Upload</span>
+                        </SidebarMenuButton>
+                    </Link>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                    <Link href="/dashboard/reports" passHref>
+                        <SidebarMenuButton
+                        isActive={pathname === '/dashboard/reports'}
+                        tooltip="Reports"
+                        >
+                        <FileText />
+                        <span>Reports</span>
                         </SidebarMenuButton>
                     </Link>
                     </SidebarMenuItem>
