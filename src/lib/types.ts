@@ -1,3 +1,4 @@
+
 export interface Prediction {
   riskScore: number;
   insight: string;
@@ -19,6 +20,7 @@ export interface Student {
   riskScore?: number; // Latest risk score
   predictionHistory: Prediction[];
   createdAt: number; // Unix timestamp
+  isTopStudent?: boolean;
 }
 
 export interface UserProfile {

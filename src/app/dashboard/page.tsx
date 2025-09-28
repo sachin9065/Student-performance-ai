@@ -40,6 +40,16 @@ export default async function DashboardPage() {
   const avgAttendance = totalStudents > 0 ? students.reduce((acc, s) => acc + s.attendancePercent, 0) / totalStudents : 0;
   const avgPerformance = totalStudents > 0 ? students.reduce((acc, s) => acc + s.previousMarks, 0) / totalStudents : 0;
 
+  const topStudentIds = [...students]
+    .sort((a, b) => b.previousMarks - a.previousMarks)
+    .slice(0, 3)
+    .map(s => s.id);
+
+  const studentsWithBadges = students.map(student => ({
+    ...student,
+    isTopStudent: topStudentIds.includes(student.id),
+  }));
+
   return (
     <div className="flex flex-col gap-6">
         <div className="flex items-center justify-between">
@@ -116,7 +126,7 @@ export default async function DashboardPage() {
                 <CardDescription>Browse, search, and manage all student records.</CardDescription>
             </CardHeader>
             <CardContent>
-                <DataTable columns={columns} data={students} />
+                <DataTable columns={columns} data={studentsWithBadges} />
             </CardContent>
         </Card>
 

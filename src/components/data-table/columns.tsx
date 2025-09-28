@@ -1,7 +1,8 @@
+
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, MoreHorizontal, Trash2 } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal, Trash2, Award } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,7 @@ import type { Student } from '@/lib/types';
 import { deleteStudentAction } from '@/actions/student-actions';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 const RiskBadge = ({ score }: { score: number | undefined }) => {
     if (score === undefined) return <Badge variant="outline">N/A</Badge>;
@@ -113,7 +115,9 @@ const ActionsCell = ({ row }: { row: any }) => {
 };
 
 
-export const columns: ColumnDef<Student>[] = [
+type StudentWithBadge = Student & { isTopStudent?: boolean };
+
+export const columns: ColumnDef<StudentWithBadge>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => {
@@ -127,6 +131,26 @@ export const columns: ColumnDef<Student>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+        const { name, isTopStudent } = row.original;
+        return (
+            <div className="flex items-center gap-2">
+                <span>{name}</span>
+                {isTopStudent && (
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <Award className="h-5 w-5 text-yellow-500" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Top Student</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                )}
+            </div>
+        )
+    }
   },
   {
     accessorKey: 'studentId',
