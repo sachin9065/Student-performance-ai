@@ -25,7 +25,6 @@ export function AppHeader() {
       <div className="relative ml-auto flex-1 md:grow-0">
         {/* Search can go here if needed */}
       </div>
-      <ThemeToggle />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
@@ -47,6 +46,8 @@ export function AppHeader() {
               </DropdownMenuItem>
             )}
             <DropdownMenuItem disabled>{user?.email}</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <ThemeToggle />
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={signOut}>
                 <LogOut className="mr-2 h-4 w-4" />
