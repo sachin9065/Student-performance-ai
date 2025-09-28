@@ -13,11 +13,11 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import { format } from 'date-fns';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { UpdatePredictionButton } from '@/components/dashboard/update-prediction-button';
 
 
 async function getStudentByEmail(email: string): Promise<Student | null> {
     const studentsRef = collection(db, "students");
+    // This query assumes the student's email is used as their studentId upon creation.
     const q = query(studentsRef, where("studentId", "==", email), limit(1));
     const querySnapshot = await getDocs(q);
     
@@ -96,11 +96,11 @@ export default function StudentProfilePage() {
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
         </Alert>
-    )
+    );
   }
 
   if (!student) {
-    notFound();
+    return notFound();
   }
   
   const formattedHistory = (student.predictionHistory || []).map(p => ({
