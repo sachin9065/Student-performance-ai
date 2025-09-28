@@ -5,15 +5,16 @@ import { db } from '@/lib/firebase';
 import type { Student, Prediction } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 import { getPredictiveInsightsForStudent } from '@/ai/flows/get-predictive-insights-for-student';
-import { runInference } from '@/lib/model';
+import { calculateStudentRiskScore } from '@/ai/flows/calculate-student-risk-score';
 
 export async function addStudentAction(studentData: Omit<Student, 'id' | 'createdAt' | 'predictionHistory'>) {
   try {
     const newDocRef = doc(collection(db, 'students'));
+    const studentId = newDocRef.id;
 
     // Run initial inference and get insight
-    const riskScore = await runInference({ ...studentData, id: '', createdAt: 0 });
-    const insightResult = await getPredictiveInsightsForStudent({ ...studentData, riskScore });
+    const { riskScore, riskFactors } = await calculateStudentRiskScore({ ...studentData, studentId, tfjsModelScore: 0 }); // tfjsModelScore is no longer used, but schema expects it for now
+    const insightResult = await getPredictiveInsightsForStudent({ ...studentData, riskScore, riskFactors });
 
     const initialPrediction: Prediction = {
       riskScore,
@@ -64,8 +65,8 @@ export async function bulkAddStudentsAction(students: Omit<Student, 'id' | 'crea
   try {
     for (const student of students) {
       const docRef = doc(collection(db, 'students'));
-      const riskScore = await runInference({ ...student, id: '', createdAt: 0 });
-      const insightResult = await getPredictiveInsightsForStudent({ ...student, riskScore });
+      const { riskScore, riskFactors } = await calculateStudentRiskScore({ ...student, studentId: docRef.id, tfjsModelScore: 0 });
+      const insightResult = await getPredictiveInsightsForStudent({ ...student, riskScore, riskFactors });
       
       const initialPrediction: Prediction = {
         riskScore,
@@ -102,8 +103,8 @@ export async function updateStudentPredictionAction(studentId: string) {
 
     const studentData = studentSnap.data() as Omit<Student, 'id'>;
 
-    const riskScore = await runInference({ ...studentData, id: studentId, createdAt: studentData.createdAt });
-    const insightResult = await getPredictiveInsightsForStudent({ ...studentData, riskScore });
+    const { riskScore, riskFactors } = await calculateStudentRiskScore({ ...studentData, studentId, tfjsModelScore: studentData.riskScore || 0 });
+    const insightResult = await getPredictiveInsightsForStudent({ ...studentData, riskScore, riskFactors });
 
     const newPrediction: Prediction = {
       riskScore,
