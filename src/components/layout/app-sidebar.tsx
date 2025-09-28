@@ -67,13 +67,13 @@ export function AppSidebar() {
             )}
             {userRole === 'Student' && (
                  <SidebarMenuItem>
-                 <Link href="/student-dashboard/my-profile" passHref>
+                 <Link href="/student-dashboard" passHref>
                      <SidebarMenuButton
-                     isActive={pathname === '/student-dashboard/my-profile'}
-                     tooltip="My Profile"
+                     isActive={pathname.startsWith('/student-dashboard')}
+                     tooltip="Dashboard"
                      >
                      <User />
-                     <span>My Profile</span>
+                     <span>Dashboard</span>
                      </SidebarMenuButton>
                  </Link>
                  </SidebarMenuItem>
