@@ -9,7 +9,7 @@ import { Download, Loader2, BrainCircuit } from 'lucide-react';
 import { generateStudentReport } from '@/ai/flows/generate-student-report-flow';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
-import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend } from 'recharts';
+import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, Tooltip, BarChart, XAxis, YAxis, Bar, CartesianGrid } from 'recharts';
 import Papa from 'papaparse';
 
 interface ReportGeneratorProps {
@@ -121,18 +121,21 @@ export function ReportGenerator({ allStudents }: ReportGeneratorProps) {
     document.body.removeChild(link);
   }
 
+  const comparisonChartData = useMemo(() => {
+    if (!selectedStudent) return [];
+
+    return [
+      { name: 'Attendance', Student: selectedStudent.attendancePercent, 'Class Average': classAverages.avgAttendance },
+      { name: 'Prev. Marks', Student: selectedStudent.previousMarks, 'Class Average': classAverages.avgPreviousMarks },
+      { name: 'Assignments', Student: selectedStudent.assignmentsScore, 'Class Average': classAverages.avgAssignmentsScore },
+      { name: 'Participation', Student: selectedStudent.participationScore, 'Class Average': classAverages.avgParticipationScore },
+      { name: 'Extra-Curricular', Student: selectedStudent.extraCurricularScore, 'Class Average': classAverages.avgExtraCurricularScore },
+    ];
+  }, [selectedStudent, classAverages]);
+
   const radarChartData = useMemo(() => {
     if (!selectedStudent) return [];
     
-    const normalize = (value: number, avg: number) => Math.min(100, Math.max(0, (value / (avg || 1)) * 50));
-    // Normalize study hours differently as it's not a percentage
-    const normalizeStudyHours = (value: number, avg: number) => {
-        const ratio = value / (avg || 1);
-        if (ratio > 1.5) return 100;
-        if (ratio < 0.5) return 25;
-        return Math.min(100, Math.max(0, ratio * 60));
-    }
-
     return [
       { subject: 'Attendance', A: selectedStudent.attendancePercent, B: classAverages.avgAttendance.toFixed(1) },
       { subject: 'Study Hours', A: selectedStudent.studyHoursPerWeek, B: classAverages.avgStudyHours.toFixed(1) },
@@ -197,25 +200,46 @@ export function ReportGenerator({ allStudents }: ReportGeneratorProps) {
                     </Alert>
                 )}
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Student vs. Class Average</CardTitle>
-                        <CardDescription>A comparative analysis of performance metrics.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="h-[400px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarChartData}>
-                                <PolarGrid />
-                                <PolarAngleAxis dataKey="subject" />
-                                <PolarRadiusAxis angle={30} domain={[0, 100]}/>
-                                <Radar name={selectedStudent.name} dataKey="A" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.6} />
-                                <Radar name="Class Average" dataKey="B" stroke="hsl(var(--chart-2))" fill="hsl(var(--chart-2))" fillOpacity={0.6} />
-                                <Legend />
-                                <Tooltip />
-                            </RadarChart>
-                        </ResponsiveContainer>
-                    </CardContent>
-                </Card>
+                <div className="grid lg:grid-cols-2 gap-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Comparative Analysis</CardTitle>
+                            <CardDescription>Spider chart comparing student to class average.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="h-[400px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarChartData}>
+                                    <PolarGrid />
+                                    <PolarAngleAxis dataKey="subject" />
+                                    <PolarRadiusAxis angle={30} domain={[0, 100]}/>
+                                    <Radar name={selectedStudent.name} dataKey="A" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.6} />
+                                    <Radar name="Class Average" dataKey="B" stroke="hsl(var(--chart-2))" fill="hsl(var(--chart-2))" fillOpacity={0.6} />
+                                    <Legend />
+                                    <Tooltip />
+                                </RadarChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Score Breakdown</CardTitle>
+                            <CardDescription>Bar chart of student scores vs. class average.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="h-[400px]">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <BarChart data={comparisonChartData}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="name" />
+                                    <YAxis domain={[0, 100]} unit="%" />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Bar dataKey="Student" fill="hsl(var(--primary))" />
+                                    <Bar dataKey="Class Average" fill="hsl(var(--chart-2))" />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+                </div>
             </CardContent>
         </Card>
       )}
