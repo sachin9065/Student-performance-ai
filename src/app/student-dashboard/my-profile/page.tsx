@@ -82,7 +82,10 @@ export default function StudentProfilePage() {
 
   useEffect(() => {
     const fetchStudent = async () => {
-      if (!user || !user.email) return;
+      if (!user || !user.email) {
+        setLoading(false);
+        return;
+      }
       setLoading(true);
       try {
         const studentData = await getStudentProfile(user.email);
@@ -98,7 +101,9 @@ export default function StudentProfilePage() {
         setLoading(false);
       }
     };
-    fetchStudent();
+    if (user) {
+        fetchStudent();
+    }
   }, [user]);
 
   if (loading) {
@@ -116,7 +121,7 @@ export default function StudentProfilePage() {
   }
 
   if (!student) {
-    return null; // Should be handled by error state
+    return null; 
   }
   
   const formattedHistory = (student.predictionHistory || []).map(p => ({
