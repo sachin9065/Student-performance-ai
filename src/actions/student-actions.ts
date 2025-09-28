@@ -1,6 +1,6 @@
 'use server';
 
-import { collection, writeBatch, doc, setDoc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+import { collection, writeBatch, doc, setDoc, updateDoc, arrayUnion, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import type { Student, Prediction } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
@@ -120,6 +120,19 @@ export async function updateStudentPredictionAction(studentId: string) {
     revalidatePath(`/dashboard/student/${studentId}`);
     
     return { success: true, prediction: newPrediction };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+export async function deleteStudentAction(studentId: string) {
+  try {
+    const studentRef = doc(db, 'students', studentId);
+    await deleteDoc(studentRef);
+
+    revalidatePath('/dashboard');
+    
+    return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message };
   }

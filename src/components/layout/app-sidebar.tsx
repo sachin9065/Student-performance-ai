@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarFooter,
 } from '@/components/ui/sidebar'
-import { School, BarChart, Plus, Upload, User } from 'lucide-react'
+import { School, BarChart, Plus, Upload, User, LayoutDashboard } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
 
 export function AppSidebar() {
@@ -66,17 +66,30 @@ export function AppSidebar() {
                 </>
             )}
             {userRole === 'Student' && (
+                <>
                  <SidebarMenuItem>
-                 <Link href="/student-dashboard" passHref>
-                     <SidebarMenuButton
-                     isActive={pathname.startsWith('/student-dashboard')}
-                     tooltip="Dashboard"
-                     >
-                     <User />
-                     <span>Dashboard</span>
-                     </SidebarMenuButton>
-                 </Link>
+                    <Link href="/student-dashboard" passHref>
+                        <SidebarMenuButton
+                        isActive={pathname === '/student-dashboard'}
+                        tooltip="Dashboard"
+                        >
+                        <LayoutDashboard />
+                        <span>Dashboard</span>
+                        </SidebarMenuButton>
+                    </Link>
                  </SidebarMenuItem>
+                 <SidebarMenuItem>
+                    <Link href="/student-dashboard/my-profile" passHref>
+                        <SidebarMenuButton
+                        isActive={pathname === '/student-dashboard/my-profile'}
+                        tooltip="My Profile"
+                        >
+                        <User />
+                        <span>My Profile</span>
+                        </SidebarMenuButton>
+                    </Link>
+                 </SidebarMenuItem>
+                </>
             )}
         </SidebarMenu>
         
