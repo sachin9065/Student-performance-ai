@@ -180,7 +180,7 @@ export default function StudentProfilePage() {
         <Card>
             <CardHeader>
                 <CardTitle className="font-headline">Academic & Engagement Metrics</CardTitle>
-            </CardHeader>
+            </Header>
             <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <InfoCard icon={Percent} title="Attendance" value={student.attendancePercent} unit="%" />
                 <InfoCard icon={BookOpen} title="Study Hours / Week" value={student.studyHoursPerWeek} />
@@ -222,7 +222,7 @@ export default function StudentProfilePage() {
         <Card>
             <CardHeader>
                 <CardTitle className="font-headline">Student Overview</CardTitle>
-            </CardHeader>
+            </Header>
             <CardContent className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 <InfoCard icon={User} title="Age" value={student.age} />
                 <InfoCard icon={User} title="Gender" value={student.gender} />
