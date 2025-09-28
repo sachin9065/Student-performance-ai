@@ -40,15 +40,15 @@ export default function AddStudentPage() {
     defaultValues: {
       studentId: '',
       name: '',
-      age: undefined,
+      age: '' as any,
       gender: 'Male',
       photoURL: '',
-      attendancePercent: undefined,
-      studyHoursPerWeek: undefined,
-      previousMarks: undefined,
-      assignmentsScore: undefined,
-      participationScore: undefined,
-      extraCurricularScore: undefined,
+      attendancePercent: '' as any,
+      studyHoursPerWeek: '' as any,
+      previousMarks: '' as any,
+      assignmentsScore: '' as any,
+      participationScore: '' as any,
+      extraCurricularScore: '' as any,
     },
   });
 
@@ -126,7 +126,7 @@ export default function AddStudentPage() {
             <FormField control={form.control} name="photoURL" render={({ field }) => (
                 <FormItem>
                 <FormLabel>Photo URL</FormLabel>
-                <FormControl><Input placeholder="https://example.com/photo.jpg" {...field} /></FormControl>
+                <FormControl><Input placeholder="https://example.com/photo.jpg" {...field} value={field.value ?? ''} /></FormControl>
                 <FormMessage />
                 </FormItem>
             )} />

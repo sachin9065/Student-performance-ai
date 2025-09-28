@@ -89,6 +89,19 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
 
   const form = useForm<StudentFormValues>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+        studentId: '',
+        name: '',
+        age: '' as any,
+        gender: 'Male',
+        photoURL: '',
+        attendancePercent: '' as any,
+        studyHoursPerWeek: '' as any,
+        previousMarks: '' as any,
+        assignmentsScore: '' as any,
+        participationScore: '' as any,
+        extraCurricularScore: '' as any,
+    }
   });
 
   useEffect(() => {
@@ -196,7 +209,7 @@ export default function EditStudentPage({ params }: { params: { id: string } }) 
             <FormField control={form.control} name="photoURL" render={({ field }) => (
                 <FormItem>
                 <FormLabel>Photo URL</FormLabel>
-                <FormControl><Input placeholder="https://example.com/photo.jpg" {...field} /></FormControl>
+                <FormControl><Input placeholder="https://example.com/photo.jpg" {...field} value={field.value ?? ''} /></FormControl>
                 <FormMessage />
                 </FormItem>
             )} />
