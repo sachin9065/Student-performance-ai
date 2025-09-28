@@ -62,7 +62,9 @@ const prompt = ai.definePrompt({
   Your task is to answer the user's question based on the provided student data. Provide clear, concise, and data-driven answers. If the question is ambiguous, ask for clarification. If the question is outside the scope of student performance, politely decline to answer.
 
   Here is the student data:
-  {{jsonStringify studentData}}
+  {{#each studentData}}
+  - Name: {{this.name}}, Student ID: {{this.studentId}}, Age: {{this.age}}, Gender: {{this.gender}}, Attendance: {{this.attendancePercent}}%, Study Hours: {{this.studyHoursPerWeek}}, Prev. Marks: {{this.previousMarks}}%, Assignments: {{this.assignmentsScore}}%, Participation: {{this.participationScore}}%, Extra-Curricular: {{this.extraCurricularScore}}%, Risk Score: {{this.riskScore}}
+  {{/each}}
 
   User's question: "{{{question}}}"
 
