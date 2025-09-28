@@ -11,12 +11,13 @@ import {
   SidebarMenuButton,
   SidebarFooter,
 } from '@/components/ui/sidebar'
-import { School, BarChart, Plus, Upload, User, LayoutDashboard, FileText } from 'lucide-react'
+import { School, BarChart, Plus, Upload, User, LayoutDashboard, FileText, LogOut } from 'lucide-react'
 import { useAuth } from '@/lib/auth'
+import { Button } from '../ui/button'
 
 export function AppSidebar() {
     const pathname = usePathname()
-    const { user, userRole } = useAuth();
+    const { user, userRole, signOut } = useAuth();
 
   return (
       <Sidebar>
@@ -104,13 +105,17 @@ export function AppSidebar() {
             )}
         </SidebarMenu>
         
-        <SidebarFooter className="p-4 border-t">
+        <SidebarFooter className="p-4 border-t space-y-4">
             <div className="flex items-center gap-3">
                 <div className="flex flex-col">
                     <span className="font-medium text-sm">{user?.displayName || user?.email}</span>
                     <span className="text-sm text-muted-foreground">{userRole}</span>
                 </div>
             </div>
+            <Button variant="outline" className="w-full justify-start" onClick={signOut}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+            </Button>
         </SidebarFooter>
       </Sidebar>
   )
