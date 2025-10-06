@@ -1,28 +1,12 @@
-// src/app/dashboard/reports/page.tsx
 
-import { collection, getDocs, query } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
-import type { Student } from '@/lib/types';
+'use client';
+
+import { useStudents } from '@/hooks/use-students';
 import { ReportGenerator } from '@/components/reports/report-generator';
+import { Loader2 } from 'lucide-react';
 
-async function getStudents(): Promise<Student[]> {
-    try {
-        const studentsCollection = collection(db, 'students');
-        const q = query(studentsCollection);
-        const studentSnapshot = await getDocs(q);
-        const studentList = studentSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        } as Student));
-        return studentList;
-    } catch (err: any) {
-        console.error('Failed to fetch student data:', err);
-        return []; 
-    }
-}
-
-export default async function ReportsPage() {
-    const students = await getStudents();
+export default function ReportsPage() {
+    const { students, loading } = useStudents();
 
     return (
         <div className="space-y-6">
@@ -30,7 +14,13 @@ export default async function ReportsPage() {
                 <h1 className="text-3xl font-bold tracking-tight font-headline">Reports & Insights</h1>
                 <p className="text-muted-foreground">Generate detailed performance reports for individual students.</p>
             </div>
-            <ReportGenerator allStudents={students} />
+            {loading ? (
+                 <div className="flex items-center justify-center h-64">
+                    <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                 </div>
+            ) : (
+                <ReportGenerator allStudents={students} />
+            )}
         </div>
     )
 }

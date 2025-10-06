@@ -1,54 +1,78 @@
 
+'use client';
 
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { useStudents } from '@/hooks/use-students';
 import type { Student } from '@/lib/types';
 import { StudentCharts } from '@/components/dashboard/student-charts';
 import { DataTable } from '@/components/data-table/data-table';
 import { columns } from '@/components/data-table/columns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Siren } from 'lucide-react';
+import { Siren, Loader2, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { PlusCircle } from 'lucide-react';
 import { ExportButton } from '@/components/dashboard/export-button';
+import { useMemo } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
-async function getStudents(): Promise<Student[]> {
-    try {
-        const studentsCollection = collection(db, 'students');
-        const q = query(studentsCollection, orderBy('createdAt', 'desc'));
-        const studentSnapshot = await getDocs(q);
-        const studentList = studentSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        } as Student));
-        return studentList;
-    } catch (err: any) {
-        console.error('Failed to fetch student data:', err);
-        // In a real app, you might want to throw the error
-        // and let an error boundary handle it.
-        return []; 
-    }
+function DashboardSkeleton() {
+    return (
+        <div className="flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+                <div>
+                    <Skeleton className="h-8 w-48" />
+                    <Skeleton className="h-4 w-72 mt-2" />
+                </div>
+                <div className="flex gap-2">
+                    <Skeleton className="h-10 w-32" />
+                    <Skeleton className="h-10 w-32" />
+                </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <Skeleton className="h-24" />
+                <Skeleton className="h-24" />
+                <Skeleton className="h-24" />
+                <Skeleton className="h-24" />
+            </div>
+            <Card>
+                <CardHeader>
+                    <Skeleton className="h-8 w-40" />
+                    <Skeleton className="h-4 w-64 mt-2" />
+                </CardHeader>
+                <CardContent>
+                    <Skeleton className="h-96 w-full" />
+                </CardContent>
+            </Card>
+        </div>
+    )
 }
 
-export default async function DashboardPage() {
-  const students = await getStudents();
+
+export default function DashboardPage() {
+  const { students, loading } = useStudents();
   
-  const totalStudents = students.length;
-  const highRiskStudents = students.filter(s => s.riskScore && s.riskScore > 0.75);
-  const avgAttendance = totalStudents > 0 ? students.reduce((acc, s) => acc + s.attendancePercent, 0) / totalStudents : 0;
-  const avgPerformance = totalStudents > 0 ? students.reduce((acc, s) => acc + s.previousMarks, 0) / totalStudents : 0;
+  const { totalStudents, highRiskStudents, avgAttendance, avgPerformance, studentsWithBadges } = useMemo(() => {
+    const totalStudents = students.length;
+    const highRiskStudents = students.filter(s => s.riskScore && s.riskScore > 0.75);
+    const avgAttendance = totalStudents > 0 ? students.reduce((acc, s) => acc + s.attendancePercent, 0) / totalStudents : 0;
+    const avgPerformance = totalStudents > 0 ? students.reduce((acc, s) => acc + s.previousMarks, 0) / totalStudents : 0;
 
-  const topStudentIds = [...students]
-    .sort((a, b) => b.previousMarks - a.previousMarks)
-    .slice(0, 3)
-    .map(s => s.id);
+    const topStudentIds = [...students]
+      .sort((a, b) => b.previousMarks - a.previousMarks)
+      .slice(0, 3)
+      .map(s => s.id);
 
-  const studentsWithBadges = students.map(student => ({
-    ...student,
-    isTopStudent: topStudentIds.includes(student.id),
-  }));
+    const studentsWithBadges = students.map(student => ({
+      ...student,
+      isTopStudent: topStudentIds.includes(student.id),
+    }));
+
+    return { totalStudents, highRiskStudents, avgAttendance, avgPerformance, studentsWithBadges };
+  }, [students]);
+
+  if (loading) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <div className="flex flex-col gap-6">
